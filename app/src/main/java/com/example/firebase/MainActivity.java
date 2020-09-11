@@ -48,9 +48,9 @@ public class MainActivity extends AppCompatActivity {
                     if(TextUtils.isEmpty(textID.getText().toString())) {
                         Toast.makeText(MainActivity.this, "Please enter an ID", Toast.LENGTH_SHORT).show();
                     } else if(TextUtils.isEmpty(textName.getText().toString())) {
-                        Toast.makeText(MainActivity.this, "Please enter a Name", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Please enter a name", Toast.LENGTH_SHORT).show();
                     } else if(TextUtils.isEmpty(textAddress.getText().toString())) {
-                        Toast.makeText(MainActivity.this, "Please enter an Address", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Please enter an address", Toast.LENGTH_SHORT).show();
                     } else {
                         student.setID(textID.getText().toString().trim());
                         student.setName(textName.getText().toString().trim());
@@ -58,12 +58,12 @@ public class MainActivity extends AppCompatActivity {
                         student.setContactNo(Integer.parseInt(textContact.getText().toString().trim()));
 
                         dbRef.push().setValue(student);
-                        Toast.makeText(MainActivity.this, "Data Saved Successfully", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Data saved successfully", Toast.LENGTH_SHORT).show();
                         clearControls();
                     }
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
-                    Toast.makeText(MainActivity.this, "Invalid Contact Number", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Invalid contact number", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -110,14 +110,40 @@ public class MainActivity extends AppCompatActivity {
                                 dbRef = FirebaseDatabase.getInstance().getReference().child("Student").child("Std1");
                                 dbRef.setValue(student);
 
-                                Toast.makeText(MainActivity.this, "Data Updated Successfully", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "Data updated successfully", Toast.LENGTH_SHORT).show();
                                 clearControls();
                             } catch(NumberFormatException e) {
                                 e.printStackTrace();
-                                Toast.makeText(MainActivity.this, "Invalid Contact Number", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(MainActivity.this, "Invalid contact number", Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             Toast.makeText(MainActivity.this, "No source to update", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
+
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatabaseReference deleteRef = FirebaseDatabase.getInstance().getReference().child("Student");
+                deleteRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.hasChild("Std1")) {
+                            dbRef = FirebaseDatabase.getInstance().getReference().child("Student").child("Std1");
+                            dbRef.removeValue();
+
+                            Toast.makeText(MainActivity.this, "Data deleted successfully", Toast.LENGTH_SHORT).show();
+                            clearControls();
+                        } else {
+                            Toast.makeText(MainActivity.this, "No source to delete", Toast.LENGTH_SHORT).show();
                         }
                     }
 
