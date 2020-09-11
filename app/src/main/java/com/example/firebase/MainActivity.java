@@ -92,6 +92,42 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
+
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatabaseReference updateRef = FirebaseDatabase.getInstance().getReference().child("Student");
+                updateRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if(dataSnapshot.hasChild("Std1")) {
+                            try {
+                                student.setID(textID.getText().toString().trim());
+                                student.setName(textName.getText().toString().trim());
+                                student.setAddress(textAddress.getText().toString().trim());
+                                student.setContactNo(Integer.parseInt(textContact.getText().toString().trim()));
+
+                                dbRef = FirebaseDatabase.getInstance().getReference().child("Student").child("Std1");
+                                dbRef.setValue(student);
+
+                                Toast.makeText(MainActivity.this, "Data Updated Successfully", Toast.LENGTH_SHORT).show();
+                                clearControls();
+                            } catch(NumberFormatException e) {
+                                e.printStackTrace();
+                                Toast.makeText(MainActivity.this, "Invalid Contact Number", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(MainActivity.this, "No source to update", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+            }
+        });
     }
 
     private void clearControls() {
